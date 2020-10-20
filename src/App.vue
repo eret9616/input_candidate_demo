@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <input 
+    ref='ipt'
       id='input' type="text" 
       v-model='inputText' 
       @focus="handleFocus" 
@@ -17,13 +18,14 @@
     <div>focusWidth:{{focusTextWidth}}</div>
     <div>candidateLeft:{{candidateLeft}}</div>
     <div>selectionStart:{{selectionStart}}</div>
+    <div>{{inputTextWidth}}</div>
 
 
           <candidate 
             :top='candidateTop' 
             :left='candidateLeft'
             :candidateText='inputText && inputText.slice(-1)'
-            @emitText='(val)=>{this.inputText= this.inputText + val}'
+            @emitText='handleEmitText'
           />
 
 
@@ -99,6 +101,21 @@ export default {
     }
   },
   methods:{
+    handleEmitText(val){
+      this.inputText= this.inputText + val;
+      // console.log('===========');
+      // console.log(iptDOM);
+      // console.log('===========');
+
+      this.$nextTick(()=>{
+       const iptDOM = this.$refs.ipt
+
+        const e ={
+          target:iptDOM
+      } 
+       this.getTargetRect(e)
+      })
+    },
     handleKeyUp(e){
       this.getTargetRect(e)
     },
