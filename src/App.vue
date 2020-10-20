@@ -102,16 +102,23 @@ export default {
   },
   methods:{
     handleEmitText(val){
-      this.inputText= this.inputText + val;
+      const start = this.inputText.slice(0,this.selectionStart)
+      const end = this.inputText.slice(this.selectionStart)
+     const oldSelectionStart = this.selectionStart
+     const step = 
+
+      this.inputText= start + val +end;
       // console.log('===========');
       // console.log(iptDOM);
       // console.log('===========');
 
       this.$nextTick(()=>{
        const iptDOM = this.$refs.ipt
-
+       iptDOM.selectionStart=oldSelectionStart +val.length
+       iptDOM.selectionEnd=oldSelectionStart +val.length
         const e ={
-          target:iptDOM
+          target:iptDOM,
+          oldPosition:this.selectionStart
       } 
        this.getTargetRect(e)
       })

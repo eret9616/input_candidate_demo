@@ -46,6 +46,7 @@ export default {
         },
         handleSelectText(e,text){
             console.log(text);
+            // e.preventDefault()
             this.$emit('emitText',text)
         }
     }
