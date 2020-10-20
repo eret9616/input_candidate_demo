@@ -105,7 +105,7 @@ export default {
       const start = this.inputText.slice(0,this.selectionStart)
       const end = this.inputText.slice(this.selectionStart)
      const oldSelectionStart = this.selectionStart
-     const step = 
+     const step = val.length
 
       this.inputText= start + val +end;
       // console.log('===========');
@@ -114,8 +114,8 @@ export default {
 
       this.$nextTick(()=>{
        const iptDOM = this.$refs.ipt
-       iptDOM.selectionStart=oldSelectionStart +val.length
-       iptDOM.selectionEnd=oldSelectionStart +val.length
+       iptDOM.selectionStart=oldSelectionStart +step
+       iptDOM.selectionEnd=oldSelectionStart +step
         const e ={
           target:iptDOM,
           oldPosition:this.selectionStart
