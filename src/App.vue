@@ -8,7 +8,9 @@
       @blur="handleBlur" 
       @input="handleInput" 
       @click="handleClick" 
-      @keyup="handleKeyUp">
+      @keyup="handleKeyUp"
+      @mouseleave="hanldeMouseLeave"
+      >
 
     <div>fmtRect:{{fmtRect}}</div>
     <div>inputText:{{inputText}}</div>
@@ -18,10 +20,12 @@
     <div>focusWidth:{{focusTextWidth}}</div>
     <div>candidateLeft:{{candidateLeft}}</div>
     <div>selectionStart:{{selectionStart}}</div>
+    <div>selectionEnd:{{selectionEnd}}</div>
     <div>{{inputTextWidth}}</div>
 
 
           <candidate 
+            v-show="!selectionStartNotEqualSelectionEnd"
             :top='candidateTop' 
             :left='candidateLeft'
             :candidateText='inputText && inputText.slice(-1)'
@@ -61,12 +65,16 @@ export default {
     inputText:undefined,
     // 
     selectionStart:undefined,
+    selectionEnd:undefined,// 当start与end不同时应该不显示
     // 字体
     font:undefined
     }
 
   },
   computed:{
+    selectionStartNotEqualSelectionEnd(){
+      return this.selectionStart !== this.selectionEnd
+    },
     fmtRect(){
       return JSON.stringify(this.rect)
     },
@@ -140,14 +148,32 @@ export default {
     },
     getTargetRect(e,noSelection){
         let domTarget = e.target
+        // 处理成响应式对象
+        if(!this.SET){
+            const obj  ={a:1,b:2}
+
+
+
+            this.SET= true
+        }
+
+
+
+
+
         const rect = domTarget.getBoundingClientRect()
         this.inputScrollLeft = domTarget.scrollLeft
         this.inputScrollWidth = domTarget.scrollWidth
         this.font = window.getComputedStyle(domTarget).font
         if(!noSelection)
         this.selectionStart = domTarget.selectionStart
+        this.selectionEnd = domTarget.selectionEnd
         this.rect = rect
         return rect
+    },
+    // 鼠标直接划出的时候，也要计算，选择了框内文本会出现这种情况
+    hanldeMouseLeave(e){
+       this.getTargetRect(e)
     }
   }
 }
